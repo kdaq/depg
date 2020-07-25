@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Decent Espresso Profile Generator</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <script type='text/javascript'>
+            function downloadProfile(str) {
+              function dataUrl(data) {
+                return "data:x-application/text;charset=utf-8," + escape(data);
+              }
+              var downloadLink = document.createElement("a");
+              downloadLink.href = dataUrl(str);
+              downloadLink.download = "depg.tcl";
+              document.body.appendChild(downloadLink);
+              downloadLink.click();
+              document.body.removeChild(downloadLink);
+            }
+
+            function disableButtons() {
+                submit_button = document.getElementById('submit')
+                if (submit_button) {
+                    submit_button.disabled = true
+                    submit_button.style.backgroundColor = '#45a049'
+                    submit_button.value = 'Processing, takes a minute or two...'
+                }
+                dl_button = document.getElementById('download')
+                if (dl_button) {
+                    dl_button.disabled = true
+                    dl_button.style.backgroundColor = '#45a049'
+                    dl_button.value = 'Please wait...'
+                }
+                profile = document.getElementById('profile')
+                if (profile) {
+                    profile.value = "Generating new profile..."
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Decent Espresso Profile Generator</h1>
+            <p>
+                By Stéphane Ribes and Alwaysdialingin. Details on <a href="https://3.basecamp.com/3671212/buckets/7351439/messages/2607195024">this Decent Diaspora page</a>.
+            </p>
+            <p>
+                Adapted to a website by Kevin D'Aquila.
+            </p>
+        </div>
+        {% if profile %}
+        <div class="container">
+            <p>
+                Download the profile and follow instructions at <a href="https://3.basecamp.com/3671212/buckets/7351439/documents/2766347080">How To Transfer A Profile (File) To Your Tablet</a>.
+            </p>
+            <div class="row">
+                <textarea id="profile" readonly rows="10">{{profile}}</textarea> 
+            </div>
+            <div class="row">
+                <input id="download" value='Download' type='button' onclick='downloadProfile(document.getElementById("profile").value)' />
+            </div>
+        </div>
+        {% endif %}
+        <div class="container container-dual">
+            <form action="/" method="post" onsubmit="disableButtons()">
+                {% for coord, cat_data in data.items() %}
+                <div class="row">
+                    <div class="col-1">
+                        <label for="{{coord}}">{{cat_data["category"]}}</label>
+                    </div>
+                    <div class="col-2">
+                        <select id="{{coord}}" name="{{coord}}" size="{{cat_data["values"]|length}}">
+                            {% for value in cat_data["values"] %}
+                            {% if cat_data["selected_idx"] == loop.index0 %}
+                            <option selected value="{{ value }}">{{value}}</option>
+                            {% else %}
+                            <option value="{{ value }}">{{value}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="row">
+                    <input id="submit" type="submit" value="Generate" />
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
