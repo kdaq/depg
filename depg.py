@@ -10,10 +10,13 @@ To setup, download their spreadsheet from
 https://3.basecamp.com/3671212/buckets/7351439/messages/2607195024 and
 drop it in the root dir of this project, named ``profile_generator.xlsx``.
 
-If run directly, ``./depg.py`` will start a web server at port 80.
+If run directly, ``./depg.py`` will start a web server at port 8000.
 Alternatively, starting via ``ENV="dev" ./depg.py`` will put the
 application into development mode. This turns on Flask debugging and
 starts at port 5001.
+
+Recommended to run using a nginx proxy as described at 
+https://flask.palletsprojects.com/en/1.1.x/deploying/wsgi-standalone/#proxy-setups.
 """
 
 import decimal
