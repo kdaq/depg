@@ -1,0 +1,3 @@
+Flask==1.1.1
+formulas==1.0.0
+numpy==1.19.0
