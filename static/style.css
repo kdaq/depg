@@ -1,0 +1,97 @@
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+label {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px 8px 8px 0;
+  display: inline-block;
+}
+
+input[type=button] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=button]:hover {
+  background-color: #45a049;
+}
+
+input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+select {
+  font-size: 14px;
+  resize: none;
+}
+
+textarea {
+  font-family: monospace;
+  resize: none;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  margin: 10px;
+  padding: 20px;
+}
+
+.container-dual {
+  column-count: 2;
+}
+
+.col-1 {
+  float: left;
+  width: 15%;
+  margin-top: 6px;
+}
+
+.col-2 {
+  float: left;
+  width: 85%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-1, .col-2, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}

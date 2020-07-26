@@ -6,8 +6,9 @@ A simple web-based wrapper around the brilliant spreadsheet created by
 Stéphane Ribes and Alwaysdialingin. Select parameters and generate a
 profile, then upload it to your Decent Espresso machine.
 
-To setup, download their spreadsheet and drop it in the root dir of this
-project, named "profile_generator.xlsx".
+To setup, download their spreadsheet from 
+https://3.basecamp.com/3671212/buckets/7351439/messages/2607195024 and
+drop it in the root dir of this project, named ``profile_generator.xlsx``.
 
 If run directly, ``./depg.py`` will start a web server at port 80.
 Alternatively, starting via ``ENV="dev" ./depg.py`` will put the
@@ -32,42 +33,6 @@ from flask import request
 from formulas.functions import flatten,get_error,wrap_func,wrap_ufunc
 
 from util import addr, dict_to_list, get_cache, get_config 
-
-# Patches for formulas plugin
-#  - Define missing PRODUCT formula
-#  - Patch HLOOKUP and VLOOKUP to cast index to integer
-#  - Patch int to handle negatives properly
-FUNCTIONS = formulas.get_functions()
-FUNCTIONS['PRODUCT'] = wrap_func(lambda l: np.prod(list(flatten(l))))
-FUNCTIONS['HLOOKUP'] = wrap_ufunc(
-    formulas.functions.look.xlookup, 
-    input_parser=lambda val,vec,index,match_type=1,transpose=False: \
-        formulas.functions.look._hlookup_parser(val,vec,int(index),match_type,\
-        transpose),
-    check_error=lambda *a: get_error(a[:1]), excluded={1, 2, 3}
-)
-FUNCTIONS['VLOOKUP'] = wrap_ufunc(
-    formulas.functions.look.xlookup, 
-    input_parser=lambda val,vec,index,match_type=1,transpose=True: \
-        formulas.functions.look._hlookup_parser(val,vec,int(index),match_type,\
-        transpose),
-    check_error=lambda *a: get_error(a[:1]), excluded={1, 2, 3}
-)
-
-def _int(x, *args, **kwargs):
-    ret = int(x, *args, **kwargs)
-    if x < 0:
-        ret -= 1
-    return ret
-
-FUNCTIONS['INT'] = wrap_ufunc(_int)
-
-# Instantiate spreadsheet objects
-xl = formulas.ExcelModel()
-wb, context = xl.add_book(get_config()["spreadsheet_file"])
-xl.pushes(*wb.worksheets, context=context)
-xl.finish()
-get_cache(xl, wb)
 
 # Instantiate web objects
 bp = Blueprint('depg', __name__,
@@ -152,6 +117,43 @@ def generate():
 
 
 if __name__ == "__main__":
+    # Patches for formulas plugin
+    #  - Define missing PRODUCT formula
+    #  - Patch HLOOKUP and VLOOKUP to cast index to integer
+    #  - Patch int to handle negatives properly
+    FUNCTIONS = formulas.get_functions()
+    FUNCTIONS['PRODUCT'] = wrap_func(lambda l: np.prod(list(flatten(l))))
+    FUNCTIONS['HLOOKUP'] = wrap_ufunc(
+        formulas.functions.look.xlookup, 
+        input_parser=lambda val,vec,index,match_type=1,transpose=False: \
+            formulas.functions.look._hlookup_parser(val,vec,int(index),match_type,\
+            transpose),
+        check_error=lambda *a: get_error(a[:1]), excluded={1, 2, 3}
+    )
+    FUNCTIONS['VLOOKUP'] = wrap_ufunc(
+        formulas.functions.look.xlookup, 
+        input_parser=lambda val,vec,index,match_type=1,transpose=True: \
+            formulas.functions.look._hlookup_parser(val,vec,int(index),match_type,\
+            transpose),
+        check_error=lambda *a: get_error(a[:1]), excluded={1, 2, 3}
+    )
+
+    def _int(x, *args, **kwargs):
+        ret = int(x, *args, **kwargs)
+        if x < 0:
+            ret -= 1
+        return ret
+
+    FUNCTIONS['INT'] = wrap_ufunc(_int)
+
+    # Instantiate spreadsheet objects
+    global xl
+    xl = formulas.ExcelModel()
+    wb, context = xl.add_book(get_config()["spreadsheet_file"])
+    xl.pushes(*wb.worksheets, context=context)
+    xl.finish()
+    get_cache(xl, wb)
+
     app.register_blueprint(bp, url_prefix='/')
     if os.environ.get("ENV", "") == "dev":
         app.run(host='0.0.0.0', port=5001, debug=1)
