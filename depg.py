@@ -31,6 +31,7 @@ from flask import g
 from flask import render_template
 from flask import request
 from formulas.functions import flatten,get_error,wrap_func,wrap_ufunc
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from util import addr, dict_to_list, get_cache, get_config 
 
@@ -40,6 +41,8 @@ bp = Blueprint('depg', __name__,
 
 app = flask.Flask(__name__,
                   template_folder='templates')
+
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 
 @bp.route('/', methods=['GET'])
@@ -158,4 +161,4 @@ if __name__ == "__main__":
     if os.environ.get("ENV", "") == "dev":
         app.run(host='0.0.0.0', port=5001, debug=1)
     else:
-        app.run(host='0.0.0.0', port=80, debug=0)
+        app.run(host='0.0.0.0', port=8000, debug=0)
