@@ -56,9 +56,9 @@ def index():
     Main page with dropdown widgets from cached data.
     """
 
-    dropdown_data = get_cache()["dropdown_data"]
-
-    return render_template('index.html', data=dropdown_data)
+    cache_d = get_cache()
+    return render_template('index.html', \
+        dropdown_data=cache_d["dropdown_data"], properties=cache_d["properties"])
 
 
 @bp.route('/', methods=['POST'])
@@ -71,7 +71,8 @@ def generate():
 
     # Retain selected values
     profile_notes_list = []
-    dropdown_data = get_cache()["dropdown_data"]
+    cache_d = get_cache()
+    dropdown_data = cache_d["dropdown_data"]
     for coord, cat_data in dropdown_data.items():
         profile_notes_list.append("{}: {}".format(cat_data["category"], request.values.get(coord, "")))
         selected_value = request.values.get(coord, "")
@@ -119,7 +120,8 @@ def generate():
     for k,v in base.items():
         profile += "{} {}\n".format(tkinter._stringify(k), tkinter._stringify(v))
 
-    return render_template('index.html', data=dropdown_data, profile=profile)
+    return render_template('index.html', \
+        dropdown_data=cache_d["dropdown_data"], profile=profile, properties=cache_d["properties"])
 
 
 if __name__ == "__main__":

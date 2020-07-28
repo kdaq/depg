@@ -58,11 +58,16 @@ textarea {
   resize: none;
 }
 
-.container {
+.container, .container-header {
   border-radius: 5px;
   background-color: #f2f2f2;
   margin: 10px;
   padding: 20px;
+}
+
+.container-header {
+  display: grid;
+  grid-template-columns: auto auto;
 }
 
 .container-dual {
@@ -86,6 +91,14 @@ textarea {
   content: "";
   display: table;
   clear: both;
+}
+
+pre {
+  align-self: center;
+  color: #aaa;
+  font-family: Monaco, monospace;
+  font-size: 10px;
+  justify-self: end;
 }
 
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */

@@ -31,7 +31,7 @@ def addr(coord, sheet_name=None):
 
     spreadsheet_file = get_config()["spreadsheet_file"]
     if not sheet_name:
-        sheet_name = get_cache()["sheet_name"]
+        sheet_name = get_cache()["properties"]["sheet_name"]
     return "'[{}]{}'!{}".\
         format(spreadsheet_file.upper(), sheet_name.upper(), coord.upper())
 
@@ -59,7 +59,7 @@ def get_cache(xl=None, wb=None):
 
     The formulas spreadsheet takes a long time to load, so cache enough details to render the initial page.
 
-    If the cache JSON does not exist, create it.
+    If xl and wb are supplied, create or refresh cache.
 
     Parameters
     ----------
@@ -76,17 +76,19 @@ def get_cache(xl=None, wb=None):
 
     cache_data = {}
 
-    # Load JSON or generate it if not found
     cache_data_file = get_config()["cache_json"]
-    if os.path.isfile(cache_data_file):
-        with open(cache_data_file) as f:
-            cache_data = json.load(f)
-    else:
+    if xl and wb:
         ws = wb.active
         sol = xl.calculate()
 
         sheet_name = wb.sheetnames[0]
-        cache_data["sheet_name"] = sheet_name
+        cache_data["properties"] = {
+            "sheet_name": sheet_name,
+            "created": str(wb.properties.created),
+            "creator": wb.properties.creator,
+            "last_modified_by": wb.properties.last_modified_by,
+            "modified": str(wb.properties.modified),
+        }
 
         # Pull out drop-down values using openpyxl
         cache_data["dropdown_data"] = {}
@@ -103,6 +105,9 @@ def get_cache(xl=None, wb=None):
 
         with open(cache_data_file, 'w', encoding='utf-8') as f:
             json.dump(cache_data, f, ensure_ascii=False, indent=4)
+    else:
+        with open(cache_data_file) as f:
+            cache_data = json.load(f)
 
     # Selected item will default to index 0
     for cat_data in cache_data["dropdown_data"].values():

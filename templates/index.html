@@ -37,14 +37,27 @@
         </script>
     </head>
     <body>
-        <div class="container">
-            <h1>Decent Espresso Profile Generator</h1>
-            <p>
-                By Stéphane Ribes and Alwaysdialingin. Details on <a href="https://3.basecamp.com/3671212/buckets/7351439/messages/2607195024">this Decent Diaspora page</a>.
-            </p>
-            <p>
-                Adapted to a website by Kevin D'Aquila.
-            </p>
+        <div class="container-header">
+            <div>
+                <h1>Decent Espresso Profile Generator</h1>
+                <p>
+                    By Stéphane Ribes and Alwaysdialingin. Details on <a href="https://3.basecamp.com/3671212/buckets/7351439/messages/2607195024">this Decent Diaspora page</a>.
+                </p>
+                <p>
+                    Adapted to a website by Kevin D'Aquila.
+                </p>
+            </div>
+            {% if properties %}
+            <pre>
+                      ACTIVE SPREADSHEET
+
+                 Creator : {{properties.creator}}
+                 Created : {{properties.created}}
+
+                Last mod : {{properties.last_modified_by}}
+                Modified : {{properties.modified}}
+            </pre>
+            {% endif %}
         </div>
         {% if profile %}
         <div class="container">
@@ -61,7 +74,7 @@
         {% endif %}
         <div class="container container-dual">
             <form action="/" method="post" onsubmit="disableButtons()">
-                {% for coord, cat_data in data.items() %}
+                {% for coord, cat_data in dropdown_data.items() %}
                 <div class="row">
                     <div class="col-1">
                         <label for="{{coord}}">{{cat_data["category"]}}</label>
