@@ -92,7 +92,15 @@ def generate():
     result_d = {}
     for key, coord in get_config()["result_coords"].items():
         result_rounding = get_config()["result_rounding"][key]
-        result_d[key] = round(decimal.Decimal(sol[addr(coord)].value[0,0]), result_rounding)
+        value = sol[addr(coord)].value[0,0]
+        if result_rounding is not None:
+            result_d[key] = round(decimal.Decimal(value), result_rounding)
+        else:
+            result_d[key] = value
+
+    # Add target weight, pressure peak, and shot time as well
+    profile_notes += "\n\nPressure peak: {}, Stop at weight: {}, Time: {}" . \
+        format(result_d["graph_pressure_peak"], result_d["graph_stop_on_weight"], result_d["graph_time"])
     result_d["profile_notes"] = profile_notes
 
     # Fill in profile base and advanced steps

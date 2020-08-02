@@ -12,7 +12,8 @@
         "hold_flow": "AI133",
         "graph_pre": "AN131",
         "graph_time": "AM130",
-        "graph_stop_on_weight": "AJ133"
+        "graph_stop_on_weight": "AJ133",
+        "graph_pressure_peak": "AL134"
     },
     "result_rounding": {
         "temperature": 1,
@@ -25,7 +26,8 @@
         "hold_flow": 1,
         "graph_pre": 1,
         "graph_time": 0,
-        "graph_stop_on_weight": 0
+        "graph_stop_on_weight": 0,
+        "graph_pressure_peak": null
     },
     "profile": {
         "advanced_shot": [
