@@ -121,7 +121,7 @@
         "profile_hide": "0",
         "profile_language": "en",
         "profile_notes": "{profile_notes}",
-        "profile_title": "DEPG",
+        "profile_title": "{profile_title}",
         "settings_profile_type": "settings_2c",
         "tank_desired_water_temperature": 0,
         "water_temperature": 80

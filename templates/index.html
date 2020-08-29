@@ -74,6 +74,14 @@
         {% endif %}
         <div class="container container-dual">
             <form action="/" method="post" onsubmit="disableButtons()">
+                <div class="row">
+                    <div class="col-1">
+                        <label for="profile_title">Profile title</label>
+                    </div>
+                    <div class="col-2">
+                        <input type="text" id="profile_title" name="profile_title" value="{{profile_title}}">
+                    </div>
+                </div>
                 {% for coord, cat_data in dropdown_data.items() %}
                 <div class="row">
                     <div class="col-1">

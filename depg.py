@@ -57,7 +57,7 @@ def index():
     """
 
     cache_d = get_cache()
-    return render_template('index.html', \
+    return render_template('index.html', profile_title="DEPG", \
         dropdown_data=cache_d["dropdown_data"], properties=cache_d["properties"])
 
 
@@ -82,6 +82,9 @@ def generate():
             selected_index = 0
         cat_data["selected_idx"] = selected_index
     profile_notes = ", ".join(profile_notes_list)
+    profile_title = request.values.get("profile_title")
+    if not profile_title:
+        profile_title = "DEPG"
 
     # Calculate params based on provided input
     sol = xl.calculate(
@@ -98,10 +101,11 @@ def generate():
         else:
             result_d[key] = value
 
-    # Add target weight, pressure peak, and shot time as well
+    # Add profile_title, target weight, pressure peak, and shot time as well
     profile_notes += "\n\nPressure peak: {}, Stop at weight: {}, Time: {}" . \
         format(result_d["graph_pressure_peak"], result_d["graph_stop_on_weight"], result_d["graph_time"])
     result_d["profile_notes"] = profile_notes
+    result_d["profile_title"] = profile_title
 
     # Fill in profile base and advanced steps
     base = {}
@@ -128,7 +132,7 @@ def generate():
     for k,v in base.items():
         profile += "{} {}\n".format(tkinter._stringify(k), tkinter._stringify(v))
 
-    return render_template('index.html', \
+    return render_template('index.html', profile_title=profile_title, \
         dropdown_data=cache_d["dropdown_data"], profile=profile, properties=cache_d["properties"])
 
 

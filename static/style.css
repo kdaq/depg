@@ -11,6 +11,10 @@ input[type=text], select, textarea {
   resize: vertical;
 }
 
+input[type=text] {
+  font-size: 14px;
+}
+
 label {
   font-size: 14px;
   font-weight: bold;
